@@ -3,40 +3,22 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import CourseCard from "@/components/CourseCard";
+import Testimonials from "@/components/Testimonials";
+import VideoBanner from "@/components/VideoBanner";
+import References from "@/components/References";
+import PreFooterCTA from "@/components/PreFooterCTA";
 import {
-  Play, Users, BookOpen, Award, ArrowRight,
-  Star, ChevronRight, Zap,
-  Shield, CheckCircle2, X,
-  MonitorPlay, TrendingUp, Rocket, Heart,
+  Users, BookOpen, Award, ArrowRight,
+  ChevronRight, Zap,
+  Shield, CheckCircle2,
+  MonitorPlay, TrendingUp, Rocket,
 } from "lucide-react";
-
-const testimonials = [
-  { name: "Ahmet Yılmaz", role: "Freelance Web Developer", text: "WordPress kursunu tamamladıktan sonra ilk müşterimi 2 hafta içinde buldum. Eğitim kalitesi gerçekten üst düzey.", rating: 5 },
-  { name: "Zeynep Kaya", role: "Dijital Pazarlama Uzmanı", text: "SEO eğitimi sayesinde müşterilerimin organik trafiğini %300 artırdım. Pratik odaklı anlatım çok faydalı.", rating: 5 },
-  { name: "Mehmet Demir", role: "E-Ticaret Girişimcisi", text: "Sıfırdan e-ticaret sitemi kurdum ve ilk ayda satış yapmaya başladım. Adım adım anlatım mükemmel.", rating: 5 },
-  { name: "Elif Arslan", role: "İçerik Üreticisi", text: "Google Ads eğitimi ile reklam bütçemi çok daha verimli kullanmaya başladım. Kesinlikle tavsiye ederim.", rating: 5 },
-  { name: "Can Öztürk", role: "Startup Kurucu", text: "React eğitimi ile kendi SaaS ürünümü geliştirdim. Eğitmenler gerçekten alanında uzman.", rating: 5 },
-  { name: "Selin Yıldırım", role: "UX Designer", text: "Tasarım kursları ile portföyümü güçlendirdim. İş tekliflerinde ciddi artış yaşadım.", rating: 5 },
-];
-
-const references = [
-  { name: "Netgsm", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/worgoo-ref-netgsm-1.svg" },
-  { name: "SK Hukuk", logo: "https://www.worgoo.com/wp-content/uploads/2025/04/sk-hukuk.png.webp" },
-  { name: "Kaya Sanat Akademi", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/kaya-sanat-ref.png" },
-  { name: "Çilek Havuz", logo: "https://www.cilekhavuz.com.tr/assets/ch/img/logo.svg" },
-  { name: "Patibul", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/patibul-ref.png" },
-  { name: "Sante+", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/sante-plus.png" },
-  { name: "Polente Natural", logo: "https://www.worgoo.com/wp-content/uploads/2025/04/polente-naturel.png.webp" },
-  { name: "Myline Moda", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/myline-mode-ref.png" },
-];
 
 export default function HomePage() {
   const [featuredCourses, setFeaturedCourses] = useState<any[]>([]);
   const [stats, setStats] = useState<any>({});
   const [instructors, setInstructors] = useState<any[]>([]);
-  const [videoOpen, setVideoOpen] = useState(false);
   const [heroIdx, setHeroIdx] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef(0);
@@ -67,23 +49,6 @@ export default function HomePage() {
       setHeroIdx((p) => diff > 0 ? (p + 1) % instructors.length : (p - 1 + instructors.length) % instructors.length);
     }
   };
-
-  // Auto-scroll testimonials
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    let pos = 0;
-    const speed = 0.5;
-    let raf: number;
-    const step = () => {
-      pos += speed;
-      if (pos >= el.scrollWidth / 2) pos = 0;
-      el.scrollLeft = pos;
-      raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, []);
 
   const currentInstructor = instructors[heroIdx] || null;
 
@@ -279,65 +244,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ TESTIMONIALS — Auto-scrolling full width ═══ */}
-      <section className="py-20 overflow-hidden bg-bg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-          <div className="text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Öğrencilerimiz Ne Diyor?</h2>
-            <p className="text-sm text-gray mt-2">Binlerce Öğrencimizin Deneyimleri</p>
-          </div>
-        </div>
-        <div ref={scrollRef} className="flex gap-5 overflow-hidden whitespace-nowrap select-none" style={{ scrollBehavior: "auto" }}>
-          {[...testimonials, ...testimonials].map((t, i) => (
-            <div key={i} className="inline-block w-[360px] flex-shrink-0 bg-white border border-border/60 rounded-2xl p-6 whitespace-normal">
-              <div className="flex gap-0.5 mb-3">{[1,2,3,4,5].map((s) => <Star key={s} size={12} className={s <= t.rating ? "text-star fill-star" : "text-border"} />)}</div>
-              <p className="text-[13px] text-gray-dark leading-relaxed">&ldquo;{t.text}&rdquo;</p>
-              <div className="flex items-center gap-2.5 mt-4 pt-4 border-t border-border/40">
-                <div className="w-9 h-9 rounded-full bg-purple/10 flex items-center justify-center text-purple text-[11px] font-bold">{t.name.charAt(0)}</div>
-                <div><p className="text-xs font-semibold text-foreground">{t.name}</p><p className="text-[10px] text-gray">{t.role}</p></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══ VIDEO BANNER CTA — Taller, stock video bg ═══ */}
-      <section className="relative overflow-hidden">
-        <div className="relative min-h-[500px] md:min-h-[600px] flex items-center justify-center">
-          {/* Stock video background */}
-          <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
-            <source src="https://cdn.coverr.co/videos/coverr-typing-on-a-laptop-5765/1080p.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-[#110e2e]/80" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(121,93,237,0.12),transparent_60%)]" />
-
-          <div className="relative z-10 text-center px-4 py-24 max-w-3xl mx-auto">
-            <button onClick={() => setVideoOpen(true)} className="mx-auto mb-10 w-24 h-24 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-purple/30 hover:border-purple/50 hover:scale-110 transition-all group">
-              <Play size={32} className="text-white ml-1 group-hover:text-purple transition-colors" fill="currentColor" />
-            </button>
-            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">Eğitim Yolculuğuna<br />Hemen Başla</h2>
-            <p className="text-[15px] text-white/45 mt-5 max-w-lg mx-auto leading-relaxed">Uzman eğitmenlerimizin hazırladığı kurslarla dijital becerilerini geliştir. İlk adımı bugün at.</p>
-            <div className="flex items-center justify-center gap-4 mt-10">
-              <Link href="/courses" className="bg-purple text-white font-semibold px-8 py-3.5 rounded-lg hover:bg-purple-hover transition-colors text-sm">
-                Kursları İncele
-              </Link>
-              <Link href="/register" className="text-white/60 hover:text-white font-medium px-7 py-3.5 rounded-lg border border-white/15 hover:border-white/30 transition-colors text-sm">
-                Ücretsiz Kayıt Ol
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Video Modal */}
-      {videoOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm" onClick={() => setVideoOpen(false)}>
-          <div className="relative w-full max-w-4xl mx-4 aspect-video bg-black rounded-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setVideoOpen(false)} className="absolute top-3 right-3 z-10 w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"><X size={16} /></button>
-            <div className="w-full h-full flex items-center justify-center text-white/30 text-sm">Video yakında eklenecek</div>
-          </div>
-        </div>
-      )}
+      <Testimonials />
+      <VideoBanner />
 
       {/* ═══ INSTRUCTORS — More effective ═══ */}
       <section className="py-24 bg-white">
@@ -377,35 +285,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ REFERENCES — Auto-scrolling logos ═══ */}
-      <section className="py-16 bg-white border-t border-border/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs text-gray font-medium mb-10">Müşterilerimiz & İş Ortaklarımız</p>
-          <div className="overflow-hidden relative">
-            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10" />
-            <div className="flex animate-ref-scroll">
-              {[...references, ...references].map((r, i) => (
-                <div key={i} className="flex items-center justify-center shrink-0 mx-8 grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300" style={{ width: "180px" }}>
-                  <img src={r.logo} alt={r.name} className="h-12 max-w-[150px] object-contain" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ FINAL CTA ═══ */}
-      <section className="bg-gradient-to-br from-primary via-[#1a1050] to-purple/80 py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">Öğrenmeye Bugün Başla</h2>
-          <p className="text-sm text-white/45 mt-4 max-w-lg mx-auto leading-relaxed">Hemen ücretsiz hesap oluştur ve eğitim içeriklerine erişim sağla. Binlerce öğrenci ile birlikte öğren.</p>
-          <div className="flex items-center justify-center gap-4 mt-9">
-            <Link href="/register" className="bg-white text-primary font-semibold px-8 py-3.5 rounded-lg hover:bg-white/90 transition-colors text-sm">Ücretsiz Kayıt Ol</Link>
-            <Link href="/courses" className="text-white/60 hover:text-white font-medium px-7 py-3.5 rounded-lg border border-white/15 hover:border-white/30 transition-colors text-sm">Kursları İncele</Link>
-          </div>
-        </div>
-      </section>
+      <References />
+      <PreFooterCTA />
     </div>
   );
 }
