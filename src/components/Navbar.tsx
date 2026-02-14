@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
@@ -10,49 +10,56 @@ export default function Navbar() {
   const { user, logout, loading } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-border">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-xl shadow-sm" : "bg-transparent"}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image src="/worgoo-akademi.svg" alt="Worgoo Akademi" width={180} height={40} priority />
+            <Image src={scrolled ? "/worgoo-akademi.svg" : "/worgoo-beyaz-logo.svg"} alt="Worgoo Akademi" width={130} height={28} priority />
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/courses" className="text-sm font-medium text-gray-dark hover:text-primary transition-colors">Kurslar</Link>
-            <Link href="/instructors" className="text-sm font-medium text-gray-dark hover:text-primary transition-colors">Eğitmenler</Link>
-            <Link href="/about" className="text-sm font-medium text-gray-dark hover:text-primary transition-colors">Hakkımızda</Link>
+          <div className="hidden md:flex items-center gap-7">
+            <Link href="/courses" className={`text-[13px] font-medium transition-colors ${scrolled ? "text-gray-dark hover:text-primary" : "text-white/80 hover:text-white"}`}>Kurslar</Link>
+            <Link href="/instructors" className={`text-[13px] font-medium transition-colors ${scrolled ? "text-gray-dark hover:text-primary" : "text-white/80 hover:text-white"}`}>Eğitmenler</Link>
+            <Link href="/about" className={`text-[13px] font-medium transition-colors ${scrolled ? "text-gray-dark hover:text-primary" : "text-white/80 hover:text-white"}`}>Hakkımızda</Link>
           </div>
 
           {/* Right */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2.5">
             {loading ? (
-              <div className="w-20 h-9 bg-border/50 rounded-lg animate-pulse" />
+              <div className="w-16 h-8 bg-white/10 rounded-lg animate-pulse" />
             ) : user ? (
               <div className="relative">
-                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-bg transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-purple/10 flex items-center justify-center text-purple text-xs font-bold">
+                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-colors ${scrolled ? "hover:bg-bg" : "hover:bg-white/10"}`}>
+                  <div className="w-7 h-7 rounded-full bg-purple/20 flex items-center justify-center text-purple text-[10px] font-bold">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
-                  <span className="text-sm font-medium text-gray-dark">{user.name.split(" ")[0]}</span>
-                  <ChevronDown size={14} className="text-gray" />
+                  <span className={`text-[13px] font-medium ${scrolled ? "text-gray-dark" : "text-white/90"}`}>{user.name.split(" ")[0]}</span>
+                  <ChevronDown size={12} className={scrolled ? "text-gray" : "text-white/50"} />
                 </button>
                 {userMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
-                    <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-border rounded-xl shadow-lg z-20 py-1 animate-fade-in">
-                      <Link href={user.role === "admin" ? "/admin" : user.role === "instructor" ? "/instructor" : "/dashboard"} onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-dark hover:bg-bg transition-colors">
-                        <LayoutDashboard size={14} /> Panel
+                    <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-border rounded-xl shadow-lg z-20 py-1 animate-fade-in">
+                      <Link href={user.role === "admin" ? "/admin" : user.role === "instructor" ? "/instructor" : "/dashboard"} onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-3.5 py-2 text-[13px] text-gray-dark hover:bg-bg transition-colors">
+                        <LayoutDashboard size={13} /> Panel
                       </Link>
-                      <Link href="/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-dark hover:bg-bg transition-colors">
-                        <User size={14} /> Kurslarım
+                      <Link href="/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-3.5 py-2 text-[13px] text-gray-dark hover:bg-bg transition-colors">
+                        <User size={13} /> Kurslarım
                       </Link>
                       <hr className="my-1 border-border" />
-                      <button onClick={() => { logout(); setUserMenuOpen(false); }} className="flex items-center gap-2 px-4 py-2.5 text-sm text-danger hover:bg-danger/5 transition-colors w-full text-left">
-                        <LogOut size={14} /> Çıkış Yap
+                      <button onClick={() => { logout(); setUserMenuOpen(false); }} className="flex items-center gap-2 px-3.5 py-2 text-[13px] text-danger hover:bg-danger/5 transition-colors w-full text-left">
+                        <LogOut size={13} /> Çıkış Yap
                       </button>
                     </div>
                   </>
@@ -60,23 +67,23 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link href="/login" className="text-sm font-medium text-gray-dark hover:text-primary transition-colors px-3 py-2">Giriş Yap</Link>
-                <Link href="/register" className="text-sm font-medium text-white bg-purple hover:bg-purple-hover transition-colors px-5 py-2.5 rounded-xl">Kayıt Ol</Link>
+                <Link href="/login" className={`text-[13px] font-medium px-3 py-1.5 rounded-lg transition-colors ${scrolled ? "text-gray-dark hover:text-primary" : "text-white/80 hover:text-white"}`}>Giriş Yap</Link>
+                <Link href="/register" className="text-[13px] font-semibold text-white bg-purple hover:bg-purple-hover transition-colors px-4 py-2 rounded-lg">Kayıt Ol</Link>
               </>
             )}
           </div>
 
           {/* Mobile toggle */}
-          <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-2 text-gray-dark">
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          <button onClick={() => setMobileOpen(!mobileOpen)} className={`md:hidden p-2 ${scrolled ? "text-gray-dark" : "text-white"}`}>
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-border bg-white animate-fade-in">
-          <div className="px-4 py-4 space-y-2">
+        <div className="md:hidden bg-white border-t border-border animate-fade-in">
+          <div className="px-4 py-3 space-y-1">
             <Link href="/courses" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-gray-dark hover:bg-bg rounded-lg">Kurslar</Link>
             <Link href="/instructors" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-gray-dark hover:bg-bg rounded-lg">Eğitmenler</Link>
             <Link href="/about" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-gray-dark hover:bg-bg rounded-lg">Hakkımızda</Link>
