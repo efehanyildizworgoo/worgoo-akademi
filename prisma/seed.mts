@@ -14,24 +14,24 @@ async function main() {
   // Admin
   const admin = await prisma.user.upsert({
     where: { email: "efehan@worgoo.com" },
-    update: {},
-    create: { email: "efehan@worgoo.com", password: pw, name: "Efehan Yıldız", role: "admin", title: "WordPress & SEO Uzmanı", bio: "Dijital dünyada markaların online varlığını güçlendiren stratejiler geliştiriyor." },
+    update: { avatar: "https://www.worgoo.com/wp-content/uploads/2025/12/ey-pp.jpg.webp" },
+    create: { email: "efehan@worgoo.com", password: pw, name: "Efehan Yıldız", role: "admin", title: "WordPress & SEO Uzmanı", bio: "Dijital dünyada markaların online varlığını güçlendiren stratejiler geliştiriyor.", avatar: "https://www.worgoo.com/wp-content/uploads/2025/12/ey-pp.jpg.webp" },
   });
   console.log("✅ Admin:", admin.email);
 
   // Instructors
   const instructors = [
-    { email: "efehan@efehanyildiz.com", name: "Efehan Yıldız", title: "WordPress & SEO Uzmanı", bio: "Dijital dünyada markaların online varlığını güçlendiren stratejiler geliştiriyor." },
-    { email: "hasan@worgoo.com", name: "Hasan Tarık Emir", title: "Dijital Pazarlama Uzmanı", bio: "Performans pazarlama ve büyüme stratejileri konusunda uzmanlaşmış profesyonel." },
-    { email: "emir@worgoo.com", name: "Emir Karaman", title: "Web Geliştirme Uzmanı", bio: "Modern web teknolojileri ve full-stack geliştirme alanında deneyimli yazılımcı." },
-    { email: "semih@worgoo.com", name: "Semih Bayındır", title: "Tasarım & UX Uzmanı", bio: "Kullanıcı deneyimi odaklı tasarım çözümleri üreten yaratıcı profesyonel." },
+    { email: "efehan@efehanyildiz.com", name: "Efehan Yıldız", title: "WordPress & SEO Uzmanı", bio: "Dijital dünyada markaların online varlığını güçlendiren stratejiler geliştiriyor.", avatar: "https://www.worgoo.com/wp-content/uploads/2025/12/ey-pp.jpg.webp" },
+    { email: "hasan@worgoo.com", name: "Hasan Tarık Emir", title: "Dijital Pazarlama Uzmanı", bio: "Performans pazarlama ve büyüme stratejileri konusunda uzmanlaşmış profesyonel.", avatar: "https://www.worgoo.com/wp-content/uploads/2025/12/hte-pp.jpg.webp" },
+    { email: "emir@worgoo.com", name: "Emir Karaman", title: "Web Geliştirme Uzmanı", bio: "Modern web teknolojileri ve full-stack geliştirme alanında deneyimli yazılımcı.", avatar: "https://www.worgoo.com/wp-content/uploads/2025/12/ek-pp.jpg.webp" },
+    { email: "semih@worgoo.com", name: "Semih Bayındır", title: "Tasarım & UX Uzmanı", bio: "Kullanıcı deneyimi odaklı tasarım çözümleri üreten yaratıcı profesyonel.", avatar: "https://www.worgoo.com/wp-content/uploads/2025/12/sb-pp.jpg.webp" },
   ];
 
   const instructorIds: string[] = [];
   for (const inst of instructors) {
     const user = await prisma.user.upsert({
       where: { email: inst.email },
-      update: { title: inst.title, bio: inst.bio },
+      update: { title: inst.title, bio: inst.bio, avatar: inst.avatar },
       create: { ...inst, password: pw, role: "instructor" },
     });
     instructorIds.push(user.id);
