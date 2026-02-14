@@ -61,6 +61,7 @@ export default function Footer() {
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-white/40">© {new Date().getFullYear()} Worgoo Akademi. Tüm hakları saklıdır.</p>
           <div className="flex items-center gap-6">
+            <Link href="/faq" className="text-xs text-white/40 hover:text-white/60 transition-colors">SSS</Link>
             <Link href="/privacy" className="text-xs text-white/40 hover:text-white/60 transition-colors">Gizlilik Politikası</Link>
             <Link href="/terms" className="text-xs text-white/40 hover:text-white/60 transition-colors">Kullanım Koşulları</Link>
           </div>
