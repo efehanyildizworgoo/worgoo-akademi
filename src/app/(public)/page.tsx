@@ -90,7 +90,7 @@ export default function HomePage() {
   return (
     <div>
       {/* ═══ HERO ═══ */}
-      <section className="relative overflow-hidden bg-[#110e2e] h-[650px] flex items-center">
+      <section className="relative overflow-hidden bg-[#110e2e]">
         {/* Rays */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-[70%] h-full bg-[radial-gradient(ellipse_at_65%_40%,rgba(121,93,237,0.12),transparent_70%)]" />
@@ -99,7 +99,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 pt-24 pb-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
             <div className="pt-14 lg:pt-0">
@@ -181,22 +181,19 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* ═══ FEATURES — No title, direct boxes, white bg, gradient accents ═══ */}
-      <section className="bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Features inside hero */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pb-16 pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: <MonitorPlay size={22} />, title: "HD Video Dersler", desc: "Vimeo altyapısı ile yüksek kaliteli video içerikler", gradient: "from-purple/5 to-purple/[0.02]" },
-              { icon: <Zap size={22} />, title: "Pratik Odaklı", desc: "Gerçek projelerle desteklenen uygulamalı eğitimler", gradient: "from-blue-500/5 to-blue-500/[0.02]" },
-              { icon: <Shield size={22} />, title: "Ömür Boyu Erişim", desc: "Bir kez satın al, sonsuza kadar eriş", gradient: "from-emerald-500/5 to-emerald-500/[0.02]" },
-              { icon: <Award size={22} />, title: "Sertifika", desc: "Kurs tamamlama sertifikası ile kariyerini güçlendir", gradient: "from-amber-500/5 to-amber-500/[0.02]" },
+              { icon: <MonitorPlay size={22} />, title: "HD Video Dersler", desc: "Vimeo altyapısı ile yüksek kaliteli video içerikler" },
+              { icon: <Zap size={22} />, title: "Pratik Odaklı", desc: "Gerçek projelerle desteklenen uygulamalı eğitimler" },
+              { icon: <Shield size={22} />, title: "Ömür Boyu Erişim", desc: "Bir kez satın al, sonsuza kadar eriş" },
+              { icon: <Award size={22} />, title: "Sertifika", desc: "Kurs tamamlama sertifikası ile kariyerini güçlendir" },
             ].map((f, i) => (
-              <div key={i} className={`bg-gradient-to-br ${f.gradient} rounded-2xl p-6 border border-border/50 hover:border-purple/20 transition-all group`}>
-                <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-purple mb-4 shadow-sm group-hover:shadow-md transition-shadow">{f.icon}</div>
-                <h3 className="text-[13px] font-bold text-foreground">{f.title}</h3>
-                <p className="text-[11px] text-gray mt-1.5 leading-relaxed">{f.desc}</p>
+              <div key={i} className="bg-white/[0.05] backdrop-blur-sm rounded-2xl p-6 border border-white/[0.08] hover:bg-white/[0.1] transition-all group">
+                <div className="w-11 h-11 rounded-xl bg-purple/15 flex items-center justify-center text-purple mb-4">{f.icon}</div>
+                <h3 className="text-[13px] font-bold text-white">{f.title}</h3>
+                <p className="text-[11px] text-white/40 mt-1.5 leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -380,19 +377,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ REFERENCES — Scrolling marquee ═══ */}
+      {/* ═══ REFERENCES — Horizontal carousel ═══ */}
       <section className="py-14 bg-bg border-t border-border/50 overflow-hidden">
-        <p className="text-center text-[10px] text-gray uppercase tracking-[0.15em] font-medium mb-8">Güvenilen Teknolojiler & Partnerler</p>
-        <div className="flex animate-marquee-slow">
-          {[0, 1, 2].map((g) => (
-            <div key={g} className="flex shrink-0 items-center gap-16 px-8">
-              {references.map((r, i) => (
-                <div key={i} className="flex items-center justify-center h-12 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300">
-                  <img src={r.logo} alt={r.name} className="h-10 max-w-[140px] object-contain" />
-                </div>
-              ))}
-            </div>
-          ))}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-[10px] text-gray uppercase tracking-[0.15em] font-medium mb-8">Güvenilen Teknolojiler & Partnerler</p>
+        </div>
+        <div className="relative">
+          <div className="flex animate-marquee-slow">
+            {[0, 1, 2].map((g) => (
+              <div key={g} className="flex shrink-0 items-center">
+                {references.map((r, i) => (
+                  <div key={i} className="flex items-center justify-center w-[270px] shrink-0 px-8 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300">
+                    <img src={r.logo} alt={r.name} className="h-12 max-w-[180px] object-contain" />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

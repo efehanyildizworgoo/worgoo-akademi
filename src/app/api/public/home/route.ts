@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const [featuredCourses, totalCourses, totalStudents, instructors] = await Promise.all([
+    const [featuredCourses, totalCourses, totalStudents, instructors, categories] = await Promise.all([
       prisma.course.findMany({
         where: { status: "published" },
         include: {
@@ -19,6 +19,11 @@ export async function GET() {
         where: { role: "instructor", isActive: true },
         select: { id: true, name: true, avatar: true, title: true, _count: { select: { courses: true } } },
       }),
+      prisma.category.findMany({
+        where: { isActive: true },
+        select: { id: true, name: true, slug: true, icon: true, _count: { select: { courses: true } } },
+        orderBy: { order: "asc" },
+      }),
     ]);
 
     const totalHours = await prisma.course.aggregate({ where: { status: "published" }, _sum: { totalDuration: true } });
@@ -32,6 +37,7 @@ export async function GET() {
         totalHours: Math.floor((totalHours._sum.totalDuration || 0) / 60),
       },
       instructors,
+      categories,
     });
   } catch (error) {
     console.error("[Home] Error:", error);
