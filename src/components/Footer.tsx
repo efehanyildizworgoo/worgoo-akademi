@@ -30,10 +30,10 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-semibold mb-4">Kategoriler</h4>
             <div className="space-y-2.5">
-              <Link href="/courses?category=wordpress" className="block text-sm text-white/60 hover:text-white transition-colors">WordPress</Link>
-              <Link href="/courses?category=seo" className="block text-sm text-white/60 hover:text-white transition-colors">SEO</Link>
-              <Link href="/courses?category=dijital-pazarlama" className="block text-sm text-white/60 hover:text-white transition-colors">Dijital Pazarlama</Link>
-              <Link href="/courses?category=tasarim" className="block text-sm text-white/60 hover:text-white transition-colors">Tasarım</Link>
+              <Link href="/wordpress" className="block text-sm text-white/60 hover:text-white transition-colors">WordPress</Link>
+              <Link href="/seo" className="block text-sm text-white/60 hover:text-white transition-colors">SEO</Link>
+              <Link href="/web-tasarim" className="block text-sm text-white/60 hover:text-white transition-colors">Web Tasarım</Link>
+              <Link href="/meta-ads" className="block text-sm text-white/60 hover:text-white transition-colors">Meta Ads</Link>
             </div>
           </div>
 

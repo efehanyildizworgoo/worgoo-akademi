@@ -52,7 +52,7 @@ export default function Navbar() {
                 <div className="absolute top-full left-0 pt-2 animate-fade-in">
                   <div className="bg-white border border-border rounded-xl shadow-lg py-2 min-w-[180px]">
                     {categories.map((cat) => (
-                      <Link key={cat.slug} href={`/courses?category=${cat.slug}`} className="block px-4 py-2 text-[13px] text-gray-dark hover:bg-bg hover:text-purple transition-colors">
+                      <Link key={cat.slug} href={`/${cat.slug}`} className="block px-4 py-2 text-[13px] text-gray-dark hover:bg-bg hover:text-purple transition-colors">
                         {cat.name}
                       </Link>
                     ))}
@@ -118,7 +118,7 @@ export default function Navbar() {
             <Link href="/about" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-gray-dark hover:bg-bg rounded-lg">Hakkımızda</Link>
             <Link href="/courses" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-gray-dark hover:bg-bg rounded-lg">Kurslar</Link>
             {categories.map((cat) => (
-              <Link key={cat.slug} href={`/courses?category=${cat.slug}`} onClick={() => setMobileOpen(false)} className="block px-6 py-2 text-[13px] text-gray hover:bg-bg rounded-lg">
+              <Link key={cat.slug} href={`/${cat.slug}`} onClick={() => setMobileOpen(false)} className="block px-6 py-2 text-[13px] text-gray hover:bg-bg rounded-lg">
                 {cat.name}
               </Link>
             ))}
