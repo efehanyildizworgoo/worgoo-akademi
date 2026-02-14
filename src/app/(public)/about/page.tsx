@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Target, Users, Zap, Heart, BookOpen, CheckCircle2, TrendingUp, Rocket, GraduationCap, Award } from "lucide-react";
+import { Target, Users, Zap, Heart, BookOpen, CheckCircle2, TrendingUp, Rocket, GraduationCap, Award, ArrowRight } from "lucide-react";
 import Testimonials from "@/components/Testimonials";
 import VideoBanner from "@/components/VideoBanner";
 import References from "@/components/References";
@@ -37,48 +37,15 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ═══ ABOUT — Photo grid + text ═══ */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left — Photo grid with stats */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-[#1a1640]">
-                  {instructors[0]?.avatar ? (
-                    <img src={instructors[0].avatar} alt={instructors[0].name} className="w-full h-full object-cover object-top" />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-purple/20 to-primary/20" />
-                  )}
-                </div>
-                <div className="bg-purple/5 rounded-2xl p-6 text-center">
-                  <p className="text-3xl font-bold text-purple">{stats.totalStudents || "500"}+</p>
-                  <p className="text-xs text-gray mt-1">Aktif Öğrenci</p>
-                </div>
-              </div>
-              <div className="space-y-4 pt-8">
-                <div className="bg-[#110e2e] rounded-2xl p-6 text-center">
-                  <p className="text-3xl font-bold text-white">{stats.totalCourses || "10"}+</p>
-                  <p className="text-xs text-white/40 mt-1">Online Kurs</p>
-                </div>
-                <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-[#1a1640]">
-                  {instructors[1]?.avatar ? (
-                    <img src={instructors[1].avatar} alt={instructors[1].name} className="w-full h-full object-cover object-top" />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-purple/10 to-primary/10" />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Right — Text */}
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Hakkımızda</h2>
+      {/* ═══ ABOUT — Light version of homepage dark section ═══ */}
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_50%,rgba(121,93,237,0.04),transparent_60%)]" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <div className="lg:col-span-5">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">Dijital Eğitimde<br /><span className="text-purple">Yeni Nesil</span> Platform</h2>
               <p className="text-sm text-gray mt-5 leading-relaxed">
                 Worgoo Akademi, dijital dünyada kariyer yapmak isteyenler için uzman eğitmenler tarafından hazırlanmış online eğitim platformudur. WordPress, SEO, dijital pazarlama, web tasarım ve daha birçok alanda pratik odaklı eğitimler sunuyoruz.
-              </p>
-              <p className="text-sm text-gray mt-4 leading-relaxed">
-                Tüm kurslarımız sektörde aktif çalışan profesyoneller tarafından hazırlanmakta ve sürekli güncellenmektedir. Amacımız, öğrencilerimizin teorik bilgiyi gerçek projelerde uygulayarak kariyerlerini bir üst seviyeye taşımalarını sağlamaktır.
               </p>
               <div className="space-y-3 mt-7">
                 {[
@@ -93,9 +60,25 @@ export default function AboutPage() {
                   </div>
                 ))}
               </div>
-              <Link href="/courses" className="inline-flex items-center gap-2 mt-8 bg-purple text-white font-semibold px-6 py-3 rounded-lg hover:bg-purple-hover transition-colors text-sm">
-                Kursları Keşfet
+              <Link href="/courses" className="inline-flex items-center gap-2 mt-8 text-sm font-semibold text-purple hover:text-purple-hover transition-colors">
+                Kursları Keşfet <ArrowRight size={14} />
               </Link>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { value: stats.totalCourses || "10", suffix: "+", label: "Online Kurs", icon: <BookOpen size={18} /> },
+                  { value: stats.totalStudents || "500", suffix: "+", label: "Aktif Öğrenci", icon: <Users size={18} /> },
+                  { value: stats.totalInstructors || "4", suffix: "", label: "Uzman Eğitmen", icon: <TrendingUp size={18} /> },
+                  { value: stats.totalHours || "100", suffix: "+", label: "Saat İçerik", icon: <Rocket size={18} /> },
+                ].map((s, i) => (
+                  <div key={i} className="bg-bg rounded-2xl p-7 border border-border/50 group hover:border-purple/20 hover:shadow-md transition-all">
+                    <div className="w-10 h-10 rounded-xl bg-purple/10 flex items-center justify-center text-purple mb-4">{s.icon}</div>
+                    <p className="text-3xl font-bold text-foreground">{s.value}<span className="text-purple">{s.suffix}</span></p>
+                    <p className="text-xs text-gray mt-1">{s.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -121,57 +104,6 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ═══ BEHIND THE SCENES — Photo gallery ═══ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Perde Arkası</h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {instructors.slice(0, 3).map((inst: any, i: number) => (
-              <div key={i} className="aspect-[4/3] rounded-2xl overflow-hidden bg-[#1a1640] relative group">
-                {inst.avatar ? (
-                  <img src={inst.avatar} alt={inst.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-purple/20 to-primary/20 flex items-center justify-center">
-                    <span className="text-4xl font-bold text-purple/30">{inst.name?.charAt(0)}</span>
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-sm font-semibold text-white">{inst.name}</p>
-                  <p className="text-[11px] text-white/60">{inst.title}</p>
-                </div>
-              </div>
-            ))}
-            {instructors.length < 3 && [1, 2, 3].slice(instructors.length).map((_, i) => (
-              <div key={`placeholder-${i}`} className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-purple/5 to-primary/5 border border-border/50" />
-            ))}
-          </div>
-          {instructors.length > 0 && (
-            <div className="mt-6 grid grid-cols-2 gap-4 max-w-md mx-auto">
-              {instructors.slice(3, 5).map((inst: any, i: number) => (
-                <div key={i} className="aspect-square rounded-2xl overflow-hidden bg-[#1a1640] relative group">
-                  {inst.avatar ? (
-                    <img src={inst.avatar} alt={inst.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-purple/20 to-primary/20 flex items-center justify-center">
-                      <span className="text-3xl font-bold text-purple/30">{inst.name?.charAt(0)}</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-              <div className="aspect-square rounded-2xl bg-purple/10 flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-purple">{stats.totalStudents || "500"}+</p>
-                  <p className="text-xs text-gray mt-1">Mutlu Öğrenci</p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
