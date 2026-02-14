@@ -12,6 +12,7 @@ export default function CategoryPage() {
   const [courses, setCourses] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState("");
   const [sort, setSort] = useState("newest");
@@ -29,13 +30,17 @@ export default function CategoryPage() {
     try {
       const res = await fetch(`/api/public/courses?${p}`);
       const data = await res.json();
-      setCourses(data.courses || []);
-      setCategories(data.categories || []);
-      const found = (data.categories || []).find((c: any) => c.slug === categorySlug);
-      if (found) {
-        setCategoryName(found.name);
-        setCategoryDesc(found.description || "");
+      const allCats = data.categories || [];
+      setCategories(allCats);
+      const found = allCats.find((c: any) => c.slug === categorySlug);
+      if (!found) {
+        setNotFound(true);
+        setLoading(false);
+        return;
       }
+      setCategoryName(found.name);
+      setCategoryDesc(found.description || "");
+      setCourses(data.courses || []);
     } catch {}
     setLoading(false);
   }, [categorySlug, search, level, sort]);
@@ -52,6 +57,36 @@ export default function CategoryPage() {
 
   const selectClass = "appearance-none bg-white/[0.06] border border-white/10 rounded-xl text-sm text-white/70 pl-4 pr-9 py-2.5 focus:outline-none focus:border-purple bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.4)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_0.75rem_center] bg-no-repeat";
 
+  if (loading && !categoryName) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 size={28} className="animate-spin text-purple" />
+      </div>
+    );
+  }
+
+  if (notFound) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center px-4">
+        <div className="text-center">
+          <h1 className="text-7xl font-bold text-purple mb-4">404</h1>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Sayfa Bulunamadı</h2>
+          <p className="text-sm text-gray max-w-md mx-auto mb-8">
+            Aradığınız kategori mevcut değil veya kaldırılmış olabilir.
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            <Link href="/courses" className="bg-purple text-white font-semibold text-sm px-6 py-2.5 rounded-xl hover:bg-purple-hover transition-colors">
+              Tüm Kurslar
+            </Link>
+            <Link href="/" className="text-sm font-medium text-gray hover:text-foreground transition-colors">
+              Ana Sayfa →
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* ═══ HERO ═══ */}
@@ -62,7 +97,7 @@ export default function CategoryPage() {
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-[1.1]">
-            {categoryName || categorySlug}
+            {categoryName}
           </h1>
           <p className="text-[15px] text-white/45 mt-4 max-w-lg leading-relaxed">
             {categoryName} kategorisindeki tüm kursları keşfedin ve öğrenmeye başlayın.

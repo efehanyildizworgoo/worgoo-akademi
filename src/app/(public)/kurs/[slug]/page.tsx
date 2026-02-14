@@ -28,7 +28,19 @@ export default function CourseDetailPage() {
   }, [slug]);
 
   if (loading) return <div className="flex items-center justify-center h-96"><Loader2 size={28} className="animate-spin text-purple" /></div>;
-  if (!course) return <div className="max-w-4xl mx-auto px-4 py-20 text-center"><h2 className="text-xl font-bold text-foreground">Kurs bulunamadı</h2></div>;
+  if (!course) return (
+    <div className="min-h-[70vh] flex flex-col items-center justify-center px-4">
+      <div className="text-center">
+        <h1 className="text-7xl font-bold text-purple mb-4">404</h1>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Kurs Bulunamadı</h2>
+        <p className="text-sm text-gray max-w-md mx-auto mb-8">Aradığınız kurs mevcut değil veya kaldırılmış olabilir.</p>
+        <div className="flex items-center justify-center gap-4">
+          <Link href="/courses" className="bg-purple text-white font-semibold text-sm px-6 py-2.5 rounded-xl hover:bg-purple-hover transition-colors">Tüm Kurslar</Link>
+          <Link href="/" className="text-sm font-medium text-gray hover:text-foreground transition-colors">Ana Sayfa →</Link>
+        </div>
+      </div>
+    </div>
+  );
 
   const hours = Math.floor(course.totalDuration / 60);
   const mins = course.totalDuration % 60;
