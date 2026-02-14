@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import InfoSidebar from "@/components/InfoSidebar";
 
 const faqCategories = [
   {
@@ -66,44 +67,49 @@ export default function FaqPage() {
       </section>
 
       {/* ═══ FAQ CONTENT ═══ */}
-      <section className="py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          {faqCategories.map((cat, ci) => (
-            <div key={ci}>
-              <h2 className="text-lg font-bold text-foreground mb-4">{cat.title}</h2>
-              <div className="space-y-3">
-                {cat.items.map((faq, fi) => {
-                  const key = `${ci}-${fi}`;
-                  return (
-                    <div key={key} className="bg-white border border-border/50 rounded-xl overflow-hidden">
-                      <button
-                        onClick={() => toggleItem(key)}
-                        className="w-full flex items-center justify-between px-6 py-4 text-left"
-                      >
-                        <span className="text-sm font-semibold text-foreground pr-4">{faq.q}</span>
-                        <ChevronDown size={16} className={`text-gray flex-shrink-0 transition-transform duration-200 ${openItems[key] ? "rotate-180" : ""}`} />
-                      </button>
-                      {openItems[key] && (
-                        <div className="px-6 pb-4 -mt-1">
-                          <p className="text-sm text-gray leading-relaxed">{faq.a}</p>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="flex flex-col lg:flex-row gap-10">
+          <aside className="lg:w-64 flex-shrink-0">
+            <InfoSidebar />
+          </aside>
+          <div className="flex-1 min-w-0 space-y-12">
+            {faqCategories.map((cat, ci) => (
+              <div key={ci}>
+                <h2 className="text-lg font-bold text-foreground mb-4">{cat.title}</h2>
+                <div className="space-y-3">
+                  {cat.items.map((faq, fi) => {
+                    const key = `${ci}-${fi}`;
+                    return (
+                      <div key={key} className="bg-white border border-border/50 rounded-xl overflow-hidden">
+                        <button
+                          onClick={() => toggleItem(key)}
+                          className="w-full flex items-center justify-between px-6 py-4 text-left"
+                        >
+                          <span className="text-sm font-semibold text-foreground pr-4">{faq.q}</span>
+                          <ChevronDown size={16} className={`text-gray flex-shrink-0 transition-transform duration-200 ${openItems[key] ? "rotate-180" : ""}`} />
+                        </button>
+                        {openItems[key] && (
+                          <div className="px-6 pb-4 -mt-1">
+                            <p className="text-sm text-gray leading-relaxed">{faq.a}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          {/* CTA */}
-          <div className="text-center pt-8 border-t border-border/50">
-            <p className="text-sm text-gray">Sorunuzun yanıtını bulamadınız mı?</p>
-            <Link href="/contact" className="inline-flex items-center gap-2 mt-3 bg-purple text-white font-semibold text-sm px-6 py-2.5 rounded-xl hover:bg-purple-hover transition-colors">
-              Bize Yazın
-            </Link>
+            {/* CTA */}
+            <div className="text-center pt-8 border-t border-border/50">
+              <p className="text-sm text-gray">Sorunuzun yanıtını bulamadınız mı?</p>
+              <Link href="/contact" className="inline-flex items-center gap-2 mt-3 bg-purple text-white font-semibold text-sm px-6 py-2.5 rounded-xl hover:bg-purple-hover transition-colors">
+                Bize Yazın
+              </Link>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
