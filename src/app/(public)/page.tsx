@@ -90,7 +90,7 @@ export default function HomePage() {
   return (
     <div>
       {/* ═══ HERO ═══ */}
-      <section className="relative overflow-hidden bg-[#110e2e]">
+      <section className="relative overflow-hidden bg-[#110e2e] h-[650px] flex items-center">
         {/* Rays */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-[70%] h-full bg-[radial-gradient(ellipse_at_65%_40%,rgba(121,93,237,0.12),transparent_70%)]" />
@@ -99,7 +99,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-24 lg:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
             <div className="pt-14 lg:pt-0">
@@ -241,8 +241,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="inline-block text-[10px] font-bold text-purple uppercase tracking-[0.15em] bg-purple/10 px-3 py-1.5 rounded-full">Hakkımızda</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mt-5 leading-tight">Dijital Eğitimde<br /><span className="text-purple">Yeni Nesil</span> Platform</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">Dijital Eğitimde<br /><span className="text-purple">Yeni Nesil</span> Platform</h2>
               <p className="text-sm text-white/45 mt-5 leading-relaxed">
                 Worgoo Akademi, dijital dünyada kariyer yapmak isteyenler için uzman eğitmenler tarafından hazırlanmış online eğitim platformudur.
               </p>
@@ -347,7 +346,6 @@ export default function HomePage() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <span className="inline-block text-[10px] font-bold text-purple uppercase tracking-[0.15em] bg-purple/5 px-3 py-1.5 rounded-full mb-4">Eğitmenler</span>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">Alanında Uzman Eğitmenler</h2>
             <p className="text-sm text-gray mt-2 max-w-md mx-auto">Sektörde Aktif Çalışan Profesyonellerden Birebir Öğrenin</p>
           </div>
@@ -382,24 +380,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ REFERENCES ═══ */}
-      <section className="py-14 bg-bg border-t border-border/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-[10px] text-gray uppercase tracking-[0.15em] font-medium mb-8">Güvenilen Teknolojiler & Partnerler</p>
-          <div className="flex items-center justify-center flex-wrap gap-x-10 gap-y-8 opacity-40 grayscale hover:opacity-70 hover:grayscale-0 transition-all duration-500">
-            {references.map((r, i) => (
-              <div key={i} className="flex items-center justify-center h-10">
-                <img src={r.logo} alt={r.name} className="h-8 max-w-[120px] object-contain" />
-              </div>
-            ))}
-          </div>
+      {/* ═══ REFERENCES — Scrolling marquee ═══ */}
+      <section className="py-14 bg-bg border-t border-border/50 overflow-hidden">
+        <p className="text-center text-[10px] text-gray uppercase tracking-[0.15em] font-medium mb-8">Güvenilen Teknolojiler & Partnerler</p>
+        <div className="flex animate-marquee-slow">
+          {[0, 1, 2].map((g) => (
+            <div key={g} className="flex shrink-0 items-center gap-16 px-8">
+              {references.map((r, i) => (
+                <div key={i} className="flex items-center justify-center h-12 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300">
+                  <img src={r.logo} alt={r.name} className="h-10 max-w-[140px] object-contain" />
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ═══ FINAL CTA ═══ */}
       <section className="bg-gradient-to-br from-primary via-[#1a1050] to-purple/80 py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <span className="inline-block text-[10px] font-bold text-purple uppercase tracking-[0.15em] bg-purple/15 px-3 py-1.5 rounded-full mb-5">Hemen Başla</span>
           <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">Öğrenmeye Bugün Başla</h2>
           <p className="text-sm text-white/45 mt-4 max-w-lg mx-auto leading-relaxed">Hemen ücretsiz hesap oluştur ve eğitim içeriklerine erişim sağla. Binlerce öğrenci ile birlikte öğren.</p>
           <div className="flex items-center justify-center gap-4 mt-9">

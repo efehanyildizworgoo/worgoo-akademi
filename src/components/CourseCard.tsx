@@ -48,6 +48,11 @@ export default function CourseCard({ course }: CourseCardProps) {
         <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-[10px] font-medium text-gray-dark px-2 py-1 rounded-full">
           {levelLabels[course.level] || course.level}
         </span>
+        {hasDiscount && (
+          <span className="absolute bottom-3 left-3 bg-red-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full">
+            %{Math.round(((course.price - course.salePrice!) / course.price) * 100)} İndirim
+          </span>
+        )}
       </div>
 
       {/* Content */}
@@ -84,9 +89,6 @@ export default function CourseCard({ course }: CourseCardProps) {
             <>
               <span className="text-lg font-bold text-purple">₺{course.salePrice!.toLocaleString("tr-TR")}</span>
               <span className="text-xs text-gray line-through">₺{course.price.toLocaleString("tr-TR")}</span>
-              <span className="ml-auto text-[10px] font-bold text-white bg-red-500 px-2 py-0.5 rounded-full">
-                %{Math.round(((course.price - course.salePrice!) / course.price) * 100)} İndirim
-              </span>
             </>
           ) : (
             <span className="text-lg font-bold text-primary">₺{course.price.toLocaleString("tr-TR")}</span>
