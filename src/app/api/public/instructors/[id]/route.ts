@@ -7,15 +7,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const instructor = await prisma.user.findFirst({
       where: { id, role: "instructor", isActive: true },
-      select: {
-        id: true,
-        name: true,
-        avatar: true,
-        title: true,
-        bio: true,
-        socials: true,
-        gallery: true,
-        createdAt: true,
+      include: {
         courses: {
           where: { status: "published" },
           include: {
@@ -30,6 +22,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     if (!instructor) {
       return NextResponse.json({ error: "Instructor not found" }, { status: 404 });
     }
+
+    // Strip sensitive fields
+    const { password: _, email: __, ...safeInstructor } = instructor;
 
     // Calculate total students across all courses
     const totalStudents = instructor.courses.reduce((sum, c) => sum + (c._count?.enrollments || 0), 0);
@@ -52,7 +47,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
     const avgRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(1) : "0";
 
-    return NextResponse.json({ instructor, totalStudents, reviews, avgRating, totalReviews: reviews.length });
+    return NextResponse.json({ instructor: safeInstructor, totalStudents, reviews, avgRating, totalReviews: reviews.length });
   } catch (error) {
     console.error("[Instructor Detail] Error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
