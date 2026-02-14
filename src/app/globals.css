@@ -29,6 +29,9 @@ body {
 
 .max-w-7xl { max-width: 1350px; }
 
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #f1f1f1; }
 ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 3px; }

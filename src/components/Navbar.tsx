@@ -12,18 +12,20 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
+  const categories = [
+    { name: "WordPress", slug: "wordpress" },
+    { name: "Web Tasarım", slug: "web-tasarim" },
+    { name: "SEO", slug: "seo" },
+    { name: "Meta Ads", slug: "meta-ads" },
+    { name: "Google Ads", slug: "google-ads" },
+    { name: "AI", slug: "ai" },
+    { name: "Sosyal Medya", slug: "sosyal-medya" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/public/home").then((r) => r.json()).then((d) => {
-      setCategories(d.categories || []);
-    }).catch(() => {});
   }, []);
 
   const linkClass = `text-[13px] font-medium transition-colors ${scrolled ? "text-gray-dark hover:text-primary" : "text-white/80 hover:text-white"}`;
@@ -48,13 +50,9 @@ export default function Navbar() {
               </button>
               {coursesOpen && (
                 <div className="absolute top-full left-0 pt-2 animate-fade-in">
-                  <div className="bg-white border border-border rounded-xl shadow-lg py-2 min-w-[200px]">
-                    <Link href="/courses" className="block px-4 py-2 text-[13px] font-semibold text-gray-dark hover:bg-bg transition-colors">
-                      Tüm Kurslar
-                    </Link>
-                    {categories.length > 0 && <hr className="my-1 border-border" />}
-                    {categories.map((cat: any) => (
-                      <Link key={cat.id} href={`/courses?category=${cat.slug}`} className="block px-4 py-2 text-[13px] text-gray-dark hover:bg-bg hover:text-purple transition-colors">
+                  <div className="bg-white border border-border rounded-xl shadow-lg py-2 min-w-[180px]">
+                    {categories.map((cat) => (
+                      <Link key={cat.slug} href={`/courses?category=${cat.slug}`} className="block px-4 py-2 text-[13px] text-gray-dark hover:bg-bg hover:text-purple transition-colors">
                         {cat.name}
                       </Link>
                     ))}
@@ -119,8 +117,8 @@ export default function Navbar() {
           <div className="px-4 py-3 space-y-1">
             <Link href="/about" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-gray-dark hover:bg-bg rounded-lg">Hakkımızda</Link>
             <Link href="/courses" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-gray-dark hover:bg-bg rounded-lg">Kurslar</Link>
-            {categories.map((cat: any) => (
-              <Link key={cat.id} href={`/courses?category=${cat.slug}`} onClick={() => setMobileOpen(false)} className="block px-6 py-2 text-[13px] text-gray hover:bg-bg rounded-lg">
+            {categories.map((cat) => (
+              <Link key={cat.slug} href={`/courses?category=${cat.slug}`} onClick={() => setMobileOpen(false)} className="block px-6 py-2 text-[13px] text-gray hover:bg-bg rounded-lg">
                 {cat.name}
               </Link>
             ))}

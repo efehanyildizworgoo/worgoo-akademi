@@ -99,7 +99,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 pt-24 pb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 pt-36 pb-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
             <div className="pt-14 lg:pt-0">
@@ -377,22 +377,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ REFERENCES — Horizontal carousel ═══ */}
-      <section className="py-14 bg-bg border-t border-border/50 overflow-hidden">
+      {/* ═══ REFERENCES — 5-per-row scrollable ═══ */}
+      <section className="py-14 bg-bg border-t border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-[10px] text-gray uppercase tracking-[0.15em] font-medium mb-8">Güvenilen Teknolojiler & Partnerler</p>
-        </div>
-        <div className="relative">
-          <div className="flex animate-marquee-slow">
-            {[0, 1, 2].map((g) => (
-              <div key={g} className="flex shrink-0 items-center">
-                {references.map((r, i) => (
-                  <div key={i} className="flex items-center justify-center w-[270px] shrink-0 px-8 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300">
-                    <img src={r.logo} alt={r.name} className="h-12 max-w-[180px] object-contain" />
-                  </div>
-                ))}
-              </div>
-            ))}
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex gap-6" style={{ minWidth: "max-content" }}>
+              {references.map((r, i) => (
+                <div key={i} className="flex items-center justify-center w-[220px] h-16 shrink-0 bg-white rounded-xl border border-border/50 px-6 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 hover:border-purple/20 transition-all duration-300">
+                  <img src={r.logo} alt={r.name} className="h-10 max-w-[160px] object-contain" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
