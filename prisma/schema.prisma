@@ -23,6 +23,7 @@ model User {
   // Instructor fields
   title     String   @default("") // "WordPress Uzmanı" etc.
   socials   String   @default("") // JSON: {twitter, linkedin, website}
+  gallery   String   @default("") // JSON array: ["url1","url2"] instructor about images
 
   enrollments  Enrollment[]
   reviews      Review[]

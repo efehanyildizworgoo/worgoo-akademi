@@ -14,6 +14,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         title: true,
         bio: true,
         socials: true,
+        gallery: true,
         createdAt: true,
         courses: {
           where: { status: "published" },
@@ -33,7 +34,25 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     // Calculate total students across all courses
     const totalStudents = instructor.courses.reduce((sum, c) => sum + (c._count?.enrollments || 0), 0);
 
-    return NextResponse.json({ instructor, totalStudents });
+    // Fetch reviews from instructor's courses
+    const courseIds = instructor.courses.map((c) => c.id);
+    const reviews = courseIds.length > 0
+      ? await prisma.review.findMany({
+          where: { courseId: { in: courseIds }, isVisible: true },
+          include: {
+            user: { select: { name: true, avatar: true } },
+            course: { select: { title: true, slug: true } },
+          },
+          orderBy: { createdAt: "desc" },
+          take: 20,
+        })
+      : [];
+
+    // Average rating
+    const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+    const avgRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(1) : "0";
+
+    return NextResponse.json({ instructor, totalStudents, reviews, avgRating, totalReviews: reviews.length });
   } catch (error) {
     console.error("[Instructor Detail] Error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
