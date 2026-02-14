@@ -8,12 +8,15 @@ const messages = [
 ];
 
 export default function TopBar() {
+  const strip = messages.map((msg, i) => (
+    <span key={i} className="text-[11px] font-medium tracking-wide px-10">{msg}</span>
+  ));
+
   return (
     <div className="bg-purple text-white overflow-hidden h-8 flex items-center relative z-[60]">
-      <div className="animate-marquee whitespace-nowrap flex items-center gap-16">
-        {[...messages, ...messages, ...messages].map((msg, i) => (
-          <span key={i} className="text-[11px] font-medium tracking-wide mx-8">{msg}</span>
-        ))}
+      <div className="flex animate-marquee">
+        <div className="flex shrink-0 items-center">{strip}</div>
+        <div className="flex shrink-0 items-center">{strip}</div>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import CourseCard from "@/components/CourseCard";
 import {
@@ -37,6 +37,10 @@ export default function HomePage() {
   const [videoOpen, setVideoOpen] = useState(false);
   const [heroIdx, setHeroIdx] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
+  const dragStart = useRef(0);
+  const dragIdx = useRef(0);
 
   useEffect(() => {
     fetch("/api/public/home").then((r) => r.json()).then((d) => {
@@ -52,6 +56,17 @@ export default function HomePage() {
     const timer = setInterval(() => setHeroIdx((p) => (p + 1) % instructors.length), 5000);
     return () => clearInterval(timer);
   }, [instructors.length]);
+
+  // Hero carousel drag
+  const onDragStart = (x: number) => { setDragging(true); dragStart.current = x; dragIdx.current = heroIdx; };
+  const onDragEnd = (x: number) => {
+    if (!dragging) return;
+    setDragging(false);
+    const diff = dragStart.current - x;
+    if (Math.abs(diff) > 50 && instructors.length > 1) {
+      setHeroIdx((p) => diff > 0 ? (p + 1) % instructors.length : (p - 1 + instructors.length) % instructors.length);
+    }
+  };
 
   // Auto-scroll testimonials
   useEffect(() => {
@@ -75,7 +90,7 @@ export default function HomePage() {
   return (
     <div>
       {/* ═══ HERO ═══ */}
-      <section className="relative min-h-[94vh] flex items-center overflow-hidden bg-[#110e2e]">
+      <section className="relative overflow-hidden bg-[#110e2e]">
         {/* Rays */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-[70%] h-full bg-[radial-gradient(ellipse_at_65%_40%,rgba(121,93,237,0.12),transparent_70%)]" />
@@ -84,21 +99,21 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-16 lg:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
-            <div className="pt-20 lg:pt-0">
-              <h1 className="text-4xl md:text-[3.4rem] lg:text-[3.6rem] font-bold text-white leading-[1.08] tracking-[-0.02em]">
-                Dijital kariyerini
+            <div className="pt-14 lg:pt-0">
+              <h1 className="text-3xl md:text-[2.8rem] lg:text-[3.2rem] font-bold text-white leading-[1.1] tracking-[-0.02em]">
+                Dijital Kariyerini
                 <br />
-                <span className="text-purple">bir üst seviyeye</span>
+                <span className="text-purple">Bir Üst Seviyeye</span>
                 <br />
-                taşı
+                Taşı
               </h1>
-              <p className="text-[15px] text-white/45 mt-6 max-w-[420px] leading-relaxed">
+              <p className="text-[14px] text-white/45 mt-5 max-w-[400px] leading-relaxed">
                 Alanında uzman eğitmenlerden WordPress, SEO, dijital pazarlama ve web geliştirme kursları. Pratik odaklı eğitimlerle kariyerini şekillendir.
               </p>
-              <div className="flex items-center gap-3 mt-8">
+              <div className="flex items-center gap-3 mt-6">
                 <Link href="/courses" className="flex items-center gap-2 bg-purple text-white font-semibold px-6 py-3 rounded-lg hover:bg-purple-hover transition-colors text-sm">
                   Kursları Keşfet <ArrowRight size={15} />
                 </Link>
@@ -108,7 +123,7 @@ export default function HomePage() {
               </div>
 
               {/* Mini stats */}
-              <div className="flex items-center gap-6 mt-14 pt-8 border-t border-white/[0.06]">
+              <div className="flex items-center gap-6 mt-10 pt-6 border-t border-white/[0.06]">
                 <div><p className="text-2xl font-bold text-white">{stats.totalCourses || "10"}+</p><p className="text-[11px] text-white/30 mt-0.5">Online Kurs</p></div>
                 <div className="w-px h-8 bg-white/[0.06]" />
                 <div><p className="text-2xl font-bold text-white">{stats.totalStudents || "500"}+</p><p className="text-[11px] text-white/30 mt-0.5">Öğrenci</p></div>
@@ -117,10 +132,17 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right — Instructor carousel */}
+            {/* Right — Instructor carousel (draggable) */}
             <div className="hidden lg:flex justify-end relative">
-              <div className="relative">
-                <div className="w-[400px] h-[480px] rounded-2xl overflow-hidden relative bg-[#1a1640]">
+              <div className="relative" ref={heroRef}
+                onMouseDown={(e) => onDragStart(e.clientX)}
+                onMouseUp={(e) => onDragEnd(e.clientX)}
+                onMouseLeave={(e) => dragging && onDragEnd(e.clientX)}
+                onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
+                onTouchEnd={(e) => onDragEnd(e.changedTouches[0].clientX)}
+                style={{ cursor: dragging ? "grabbing" : "grab" }}
+              >
+                <div className="w-[380px] h-[440px] rounded-2xl overflow-hidden relative bg-[#1a1640] select-none">
                   <div className="absolute inset-0 bg-gradient-to-t from-[#110e2e] via-[#110e2e]/30 to-transparent z-10" />
                   <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#110e2e]/60 to-transparent z-10" />
                   {currentInstructor?.avatar ? (
@@ -162,7 +184,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FEATURES — No title, direct boxes, white bg, gradient accents ═══ */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
@@ -182,12 +204,12 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FEATURED COURSES ═══ */}
-      <section className="py-20 bg-bg">
+      <section className="py-16 bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-10">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">Öne Çıkan Kurslar</h2>
-              <p className="text-sm text-gray mt-2">En popüler ve en çok tercih edilen kurslarımız</p>
+              <p className="text-sm text-gray mt-2">En Popüler ve En Çok Tercih Edilen Kurslarımız</p>
             </div>
             <Link href="/courses" className="hidden md:flex items-center gap-1.5 text-sm font-medium text-purple hover:text-purple-hover transition-colors">
               Tümünü Gör <ChevronRight size={16} />
@@ -213,46 +235,46 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ ABOUT — More effective ═══ */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(ellipse_at_80%_50%,rgba(121,93,237,0.04),transparent_70%)]" />
+      {/* ═══ ABOUT — Dark contrast ═══ */}
+      <section className="py-24 bg-[#110e2e] relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_50%,rgba(121,93,237,0.08),transparent_60%)]" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="inline-block text-[10px] font-bold text-purple uppercase tracking-[0.15em] bg-purple/5 px-3 py-1.5 rounded-full">Hakkımızda</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-5 leading-tight">Dijital eğitimde<br /><span className="text-purple">yeni nesil</span> platform</h2>
-              <p className="text-sm text-gray mt-5 leading-relaxed">
+              <span className="inline-block text-[10px] font-bold text-purple uppercase tracking-[0.15em] bg-purple/10 px-3 py-1.5 rounded-full">Hakkımızda</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mt-5 leading-tight">Dijital Eğitimde<br /><span className="text-purple">Yeni Nesil</span> Platform</h2>
+              <p className="text-sm text-white/45 mt-5 leading-relaxed">
                 Worgoo Akademi, dijital dünyada kariyer yapmak isteyenler için uzman eğitmenler tarafından hazırlanmış online eğitim platformudur.
               </p>
               <div className="space-y-3 mt-7">
                 {[
-                  "Sektörde aktif çalışan uzman eğitmenler",
-                  "Gerçek projelerle desteklenen pratik eğitimler",
-                  "Sürekli güncellenen güncel içerikler",
-                  "7/24 erişilebilir online platform",
+                  "Sektörde Aktif Çalışan Uzman Eğitmenler",
+                  "Gerçek Projelerle Desteklenen Pratik Eğitimler",
+                  "Sürekli Güncellenen Güncel İçerikler",
+                  "7/24 Erişilebilir Online Platform",
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2.5">
                     <CheckCircle2 size={15} className="text-purple flex-shrink-0" />
-                    <span className="text-[13px] text-gray-dark">{item}</span>
+                    <span className="text-[13px] text-white/60">{item}</span>
                   </div>
                 ))}
               </div>
-              <Link href="/about" className="inline-flex items-center gap-2 mt-8 text-sm font-semibold text-purple hover:text-purple-hover transition-colors">
+              <Link href="/about" className="inline-flex items-center gap-2 mt-8 text-sm font-semibold text-purple hover:text-white transition-colors">
                 Daha Fazla Bilgi <ArrowRight size={14} />
               </Link>
             </div>
             <div className="lg:col-span-7">
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { value: stats.totalCourses || "10", suffix: "+", label: "Online Kurs", icon: <BookOpen size={18} />, color: "purple" },
-                  { value: stats.totalStudents || "500", suffix: "+", label: "Aktif Öğrenci", icon: <Users size={18} />, color: "primary" },
-                  { value: stats.totalInstructors || "4", suffix: "", label: "Uzman Eğitmen", icon: <TrendingUp size={18} />, color: "purple" },
-                  { value: stats.totalHours || "100", suffix: "+", label: "Saat İçerik", icon: <Rocket size={18} />, color: "primary" },
+                  { value: stats.totalCourses || "10", suffix: "+", label: "Online Kurs", icon: <BookOpen size={18} /> },
+                  { value: stats.totalStudents || "500", suffix: "+", label: "Aktif Öğrenci", icon: <Users size={18} /> },
+                  { value: stats.totalInstructors || "4", suffix: "", label: "Uzman Eğitmen", icon: <TrendingUp size={18} /> },
+                  { value: stats.totalHours || "100", suffix: "+", label: "Saat İçerik", icon: <Rocket size={18} /> },
                 ].map((s, i) => (
-                  <div key={i} className="bg-bg rounded-2xl p-7 group hover:bg-purple/[0.03] transition-colors">
-                    <div className={`w-10 h-10 rounded-xl bg-${s.color}/10 flex items-center justify-center text-${s.color} mb-4`}>{s.icon}</div>
-                    <p className="text-3xl font-bold text-foreground">{s.value}<span className="text-purple">{s.suffix}</span></p>
-                    <p className="text-xs text-gray mt-1">{s.label}</p>
+                  <div key={i} className="bg-white/[0.04] rounded-2xl p-7 border border-white/[0.06] group hover:bg-white/[0.07] transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-purple/15 flex items-center justify-center text-purple mb-4">{s.icon}</div>
+                    <p className="text-3xl font-bold text-white">{s.value}<span className="text-purple">{s.suffix}</span></p>
+                    <p className="text-xs text-white/35 mt-1">{s.label}</p>
                   </div>
                 ))}
               </div>
@@ -266,7 +288,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
           <div className="text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">Öğrencilerimiz Ne Diyor?</h2>
-            <p className="text-sm text-gray mt-2">Binlerce öğrencimizin deneyimleri</p>
+            <p className="text-sm text-gray mt-2">Binlerce Öğrencimizin Deneyimleri</p>
           </div>
         </div>
         <div ref={scrollRef} className="flex gap-5 overflow-hidden whitespace-nowrap select-none" style={{ scrollBehavior: "auto" }}>
@@ -285,25 +307,25 @@ export default function HomePage() {
 
       {/* ═══ VIDEO BANNER CTA — Taller, stock video bg ═══ */}
       <section className="relative overflow-hidden">
-        <div className="relative min-h-[420px] md:min-h-[500px] flex items-center justify-center">
+        <div className="relative min-h-[500px] md:min-h-[600px] flex items-center justify-center">
           {/* Stock video background */}
           <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
             <source src="https://cdn.coverr.co/videos/coverr-typing-on-a-laptop-5765/1080p.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-[#110e2e]/85" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(121,93,237,0.1),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[#110e2e]/80" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(121,93,237,0.12),transparent_60%)]" />
 
-          <div className="relative z-10 text-center px-4 py-20 max-w-3xl mx-auto">
-            <button onClick={() => setVideoOpen(true)} className="mx-auto mb-8 w-20 h-20 rounded-full bg-purple/20 border-2 border-purple/40 flex items-center justify-center hover:bg-purple/30 hover:scale-110 transition-all group">
-              <Play size={28} className="text-white ml-1" fill="currentColor" />
+          <div className="relative z-10 text-center px-4 py-24 max-w-3xl mx-auto">
+            <button onClick={() => setVideoOpen(true)} className="mx-auto mb-10 w-24 h-24 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-purple/30 hover:border-purple/50 hover:scale-110 transition-all group">
+              <Play size={32} className="text-white ml-1 group-hover:text-purple transition-colors" fill="currentColor" />
             </button>
-            <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">Eğitim yolculuğuna<br />hemen başla</h2>
-            <p className="text-sm text-white/45 mt-4 max-w-md mx-auto leading-relaxed">Uzman eğitmenlerimizin hazırladığı kurslarla dijital becerilerini geliştir. İlk adımı bugün at.</p>
-            <div className="flex items-center justify-center gap-3 mt-8">
-              <Link href="/courses" className="bg-purple text-white font-semibold px-7 py-3 rounded-lg hover:bg-purple-hover transition-colors text-sm">
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">Eğitim Yolculuğuna<br />Hemen Başla</h2>
+            <p className="text-[15px] text-white/45 mt-5 max-w-lg mx-auto leading-relaxed">Uzman eğitmenlerimizin hazırladığı kurslarla dijital becerilerini geliştir. İlk adımı bugün at.</p>
+            <div className="flex items-center justify-center gap-4 mt-10">
+              <Link href="/courses" className="bg-purple text-white font-semibold px-8 py-3.5 rounded-lg hover:bg-purple-hover transition-colors text-sm">
                 Kursları İncele
               </Link>
-              <Link href="/register" className="text-white/60 hover:text-white font-medium px-6 py-3 rounded-lg border border-white/15 hover:border-white/30 transition-colors text-sm">
+              <Link href="/register" className="text-white/60 hover:text-white font-medium px-7 py-3.5 rounded-lg border border-white/15 hover:border-white/30 transition-colors text-sm">
                 Ücretsiz Kayıt Ol
               </Link>
             </div>
@@ -327,7 +349,7 @@ export default function HomePage() {
           <div className="text-center mb-14">
             <span className="inline-block text-[10px] font-bold text-purple uppercase tracking-[0.15em] bg-purple/5 px-3 py-1.5 rounded-full mb-4">Eğitmenler</span>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">Alanında Uzman Eğitmenler</h2>
-            <p className="text-sm text-gray mt-2 max-w-md mx-auto">Sektörde aktif çalışan profesyonellerden birebir öğrenin</p>
+            <p className="text-sm text-gray mt-2 max-w-md mx-auto">Sektörde Aktif Çalışan Profesyonellerden Birebir Öğrenin</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {(instructors.length > 0 ? instructors : [
@@ -379,13 +401,14 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FINAL CTA ═══ */}
-      <section className="bg-gradient-to-r from-primary to-purple/90 py-14">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">Öğrenmeye Bugün Başla</h2>
-          <p className="text-sm text-white/50 mt-3 max-w-lg mx-auto">Hemen ücretsiz hesap oluştur ve eğitim içeriklerine erişim sağla.</p>
-          <div className="flex items-center justify-center gap-3 mt-7">
-            <Link href="/register" className="bg-white text-primary font-semibold px-7 py-3 rounded-lg hover:bg-white/90 transition-colors text-sm">Ücretsiz Kayıt Ol</Link>
-            <Link href="/courses" className="text-white/60 hover:text-white font-medium px-6 py-3 rounded-lg border border-white/15 hover:border-white/30 transition-colors text-sm">Kursları İncele</Link>
+      <section className="bg-gradient-to-br from-primary via-[#1a1050] to-purple/80 py-20">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <span className="inline-block text-[10px] font-bold text-purple uppercase tracking-[0.15em] bg-purple/15 px-3 py-1.5 rounded-full mb-5">Hemen Başla</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">Öğrenmeye Bugün Başla</h2>
+          <p className="text-sm text-white/45 mt-4 max-w-lg mx-auto leading-relaxed">Hemen ücretsiz hesap oluştur ve eğitim içeriklerine erişim sağla. Binlerce öğrenci ile birlikte öğren.</p>
+          <div className="flex items-center justify-center gap-4 mt-9">
+            <Link href="/register" className="bg-white text-primary font-semibold px-8 py-3.5 rounded-lg hover:bg-white/90 transition-colors text-sm">Ücretsiz Kayıt Ol</Link>
+            <Link href="/courses" className="text-white/60 hover:text-white font-medium px-7 py-3.5 rounded-lg border border-white/15 hover:border-white/30 transition-colors text-sm">Kursları İncele</Link>
           </div>
         </div>
       </section>
