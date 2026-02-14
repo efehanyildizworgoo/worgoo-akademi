@@ -377,15 +377,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ REFERENCES — 5-per-row scrollable ═══ */}
-      <section className="py-14 bg-bg border-t border-border/50">
+      {/* ═══ REFERENCES — Auto-scrolling logos ═══ */}
+      <section className="py-16 bg-white border-t border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-[10px] text-gray uppercase tracking-[0.15em] font-medium mb-8">Güvenilen Teknolojiler & Partnerler</p>
-          <div className="overflow-x-auto scrollbar-hide">
-            <div className="flex gap-6" style={{ minWidth: "max-content" }}>
-              {references.map((r, i) => (
-                <div key={i} className="flex items-center justify-center w-[220px] h-16 shrink-0 bg-white rounded-xl border border-border/50 px-6 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 hover:border-purple/20 transition-all duration-300">
-                  <img src={r.logo} alt={r.name} className="h-10 max-w-[160px] object-contain" />
+          <p className="text-center text-xs text-gray font-medium mb-10">Müşterilerimiz & İş Ortaklarımız</p>
+          <div className="overflow-hidden relative">
+            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10" />
+            <div className="flex animate-ref-scroll">
+              {[...references, ...references].map((r, i) => (
+                <div key={i} className="flex items-center justify-center shrink-0 mx-8 grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300" style={{ width: "180px" }}>
+                  <img src={r.logo} alt={r.name} className="h-12 max-w-[150px] object-contain" />
                 </div>
               ))}
             </div>

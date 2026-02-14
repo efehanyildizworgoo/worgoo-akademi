@@ -55,8 +55,8 @@ body {
 }
 .animate-marquee { animation: marquee 30s linear infinite; }
 
-@keyframes marquee-slow {
+@keyframes ref-scroll {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-33.333%); }
+  100% { transform: translateX(-50%); }
 }
-.animate-marquee-slow { animation: marquee-slow 40s linear infinite; }
+.animate-ref-scroll { animation: ref-scroll 35s linear infinite; }
