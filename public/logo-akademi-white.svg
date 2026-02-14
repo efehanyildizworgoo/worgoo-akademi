@@ -8,5 +8,5 @@
     <path fill="#ffffff" d="M338.01-.45v50h50V-.45h-50ZM378.01,39.55h-30V9.55h30v30Z"/>
     <path fill="#ffffff" d="M214.01,39.55l40,10v20h-40v10h50V-.45h-50v40ZM224.01,9.55h30v29.69l-30-7.5V9.55Z"/>
   </g>
-  <text x="395" y="14" font-family="'Syne', system-ui, sans-serif" font-weight="700" font-size="18" fill="#795CED">/akademi</text>
+  <text x="395" y="14" font-family="'Syne', system-ui, sans-serif" font-weight="700" font-size="18" fill="#00E5FF">/akademi</text>
 </svg>
