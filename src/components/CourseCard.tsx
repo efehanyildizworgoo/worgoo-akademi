@@ -84,6 +84,9 @@ export default function CourseCard({ course }: CourseCardProps) {
             <>
               <span className="text-lg font-bold text-purple">₺{course.salePrice!.toLocaleString("tr-TR")}</span>
               <span className="text-xs text-gray line-through">₺{course.price.toLocaleString("tr-TR")}</span>
+              <span className="ml-auto text-[10px] font-bold text-white bg-red-500 px-2 py-0.5 rounded-full">
+                %{Math.round(((course.price - course.salePrice!) / course.price) * 100)} İndirim
+              </span>
             </>
           ) : (
             <span className="text-lg font-bold text-primary">₺{course.price.toLocaleString("tr-TR")}</span>

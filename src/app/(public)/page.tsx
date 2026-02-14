@@ -20,14 +20,14 @@ const testimonials = [
 ];
 
 const references = [
-  { name: "Worgoo", logo: "/worgoo-logo.svg" },
-  { name: "WordPress", text: "WordPress" },
-  { name: "Google", text: "Google" },
-  { name: "Vimeo", text: "Vimeo" },
-  { name: "Figma", text: "Figma" },
-  { name: "Shopify", text: "Shopify" },
-  { name: "HubSpot", text: "HubSpot" },
-  { name: "Semrush", text: "Semrush" },
+  { name: "Netgsm", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/worgoo-ref-netgsm-1.svg" },
+  { name: "SK Hukuk", logo: "https://www.worgoo.com/wp-content/uploads/2025/04/sk-hukuk.png.webp" },
+  { name: "Kaya Sanat Akademi", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/kaya-sanat-ref.png" },
+  { name: "Çilek Havuz", logo: "https://www.cilekhavuz.com.tr/assets/ch/img/logo.svg" },
+  { name: "Patibul", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/patibul-ref.png" },
+  { name: "Sante+", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/sante-plus.png" },
+  { name: "Polente Natural", logo: "https://www.worgoo.com/wp-content/uploads/2025/04/polente-naturel.png.webp" },
+  { name: "Myline Moda", logo: "https://www.worgoo.com/wp-content/uploads/2025/02/myline-mode-ref.png" },
 ];
 
 export default function HomePage() {
@@ -99,7 +99,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-24 lg:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
             <div className="pt-14 lg:pt-0">
@@ -386,14 +386,10 @@ export default function HomePage() {
       <section className="py-14 bg-bg border-t border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-[10px] text-gray uppercase tracking-[0.15em] font-medium mb-8">Güvenilen Teknolojiler & Partnerler</p>
-          <div className="flex items-center justify-center flex-wrap gap-x-12 gap-y-6 opacity-30 grayscale hover:opacity-50 hover:grayscale-0 transition-all duration-500">
+          <div className="flex items-center justify-center flex-wrap gap-x-10 gap-y-8 opacity-40 grayscale hover:opacity-70 hover:grayscale-0 transition-all duration-500">
             {references.map((r, i) => (
-              <div key={i} className="flex items-center justify-center h-8">
-                {r.logo ? (
-                  <img src={r.logo} alt={r.name} className="h-5 object-contain" />
-                ) : (
-                  <span className="text-base font-bold text-foreground tracking-tight">{r.text}</span>
-                )}
+              <div key={i} className="flex items-center justify-center h-10">
+                <img src={r.logo} alt={r.name} className="h-8 max-w-[120px] object-contain" />
               </div>
             ))}
           </div>
