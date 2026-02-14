@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Instructor fields
+  slug      String   @default("") // URL slug for instructor profile
   title     String   @default("") // "WordPress Uzmanı" etc.
   socials   String   @default("") // JSON: {twitter, linkedin, website}
   gallery   String   @default("") // JSON array: ["url1","url2"] instructor about images

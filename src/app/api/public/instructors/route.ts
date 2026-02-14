@@ -7,6 +7,7 @@ export async function GET() {
       where: { role: "instructor", isActive: true },
       select: {
         id: true,
+        slug: true,
         name: true,
         avatar: true,
         title: true,

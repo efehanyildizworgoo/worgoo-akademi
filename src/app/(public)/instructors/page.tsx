@@ -60,7 +60,7 @@ export default function InstructorsPage() {
               const topics = getTopics(inst);
               const students = getTotalStudents(inst);
               return (
-                <Link key={inst.id} href={`/instructors/${inst.id}`} className="block group">
+                <Link key={inst.id} href={`/egitmen/${inst.slug || inst.id}`} className="block group">
                   <div className="bg-white border border-border rounded-2xl p-7 hover:border-purple/20 hover:shadow-xl transition-all h-full">
                     <div className="flex items-start gap-5">
                       {/* Avatar */}

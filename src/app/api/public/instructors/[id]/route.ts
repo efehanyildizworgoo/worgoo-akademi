@@ -5,8 +5,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
 
+    // Support both slug and id lookup
     const instructor = await prisma.user.findFirst({
-      where: { id, role: "instructor", isActive: true },
+      where: { role: "instructor", isActive: true, OR: [{ slug: id }, { id }] },
       include: {
         courses: {
           where: { status: "published" },
