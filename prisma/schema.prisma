@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── USERS ───────────────────────────────────────────
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  avatar    String   @default("")
+  bio       String   @default("")
+  role      String   @default("student") // admin, instructor, student
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Instructor fields
+  title     String   @default("") // "WordPress Uzmanı" etc.
+  socials   String   @default("") // JSON: {twitter, linkedin, website}
+
+  enrollments  Enrollment[]
+  reviews      Review[]
+  payments     Payment[]
+  courses      Course[]       @relation("InstructorCourses")
+  progress     LessonProgress[]
+
+  @@map("wa_users")
+}
+
+// ─── CATEGORIES ──────────────────────────────────────
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String   @default("")
+  icon        String   @default("")
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  courses Course[]
+
+  @@map("wa_categories")
+}
+
+// ─── COURSES ─────────────────────────────────────────
+model Course {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  description  String   @default("")
+  shortDesc    String   @default("")
+  thumbnail    String   @default("")
+  previewVideo String   @default("") // Vimeo URL for preview
+  price        Float    @default(0)
+  salePrice    Float?
+  level        String   @default("beginner") // beginner, intermediate, advanced
+  language     String   @default("tr")
+  status       String   @default("draft") // draft, published, archived
+  isFeatured   Boolean  @default(false)
+  totalDuration Int     @default(0) // minutes
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  instructorId String
+  instructor   User     @relation("InstructorCourses", fields: [instructorId], references: [id])
+
+  categoryId   String?
+  category     Category? @relation(fields: [categoryId], references: [id])
+
+  sections    Section[]
+  enrollments Enrollment[]
+  reviews     Review[]
+
+  @@map("wa_courses")
+}
+
+// ─── SECTIONS (Course chapters) ──────────────────────
+model Section {
+  id       String @id @default(cuid())
+  title    String
+  order    Int    @default(0)
+
+  courseId  String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  lessons  Lesson[]
+
+  @@map("wa_sections")
+}
+
+// ─── LESSONS ─────────────────────────────────────────
+model Lesson {
+  id          String  @id @default(cuid())
+  title       String
+  description String  @default("")
+  vimeoId     String  @default("") // Vimeo video ID
+  duration    Int     @default(0) // minutes
+  order       Int     @default(0)
+  isFree      Boolean @default(false) // Free preview lesson
+  type        String  @default("video") // video, text, quiz
+
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  progress LessonProgress[]
+
+  @@map("wa_lessons")
+}
+
+// ─── LESSON PROGRESS ─────────────────────────────────
+model LessonProgress {
+  id          String   @id @default(cuid())
+  isCompleted Boolean  @default(false)
+  watchedSec  Int      @default(0) // seconds watched
+  completedAt DateTime?
+  updatedAt   DateTime @updatedAt
+
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("wa_lesson_progress")
+}
+
+// ─── ENROLLMENTS ─────────────────────────────────────
+model Enrollment {
+  id         String   @id @default(cuid())
+  status     String   @default("active") // active, completed, refunded
+  progress   Float    @default(0) // 0-100 percentage
+  enrolledAt DateTime @default(now())
+  completedAt DateTime?
+
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId  String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  payment  Payment?
+
+  @@unique([userId, courseId])
+  @@map("wa_enrollments")
+}
+
+// ─── PAYMENTS ────────────────────────────────────────
+model Payment {
+  id            String   @id @default(cuid())
+  amount        Float
+  method        String   @default("paytr") // paytr, transfer
+  status        String   @default("pending") // pending, paid, failed, refunded
+  transactionId String   @default("") // PayTR merchant_oid or transfer ref
+  description   String   @default("")
+  paymentDate   DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+
+  enrollmentId String?    @unique
+  enrollment   Enrollment? @relation(fields: [enrollmentId], references: [id])
+
+  @@map("wa_payments")
+}
+
+// ─── REVIEWS ─────────────────────────────────────────
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      @default(5) // 1-5
+  comment   String   @default("")
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId  String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("wa_reviews")
+}
+
+// ─── SITE SETTINGS ───────────────────────────────────
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @default("")
+
+  @@map("wa_site_settings")
+}
