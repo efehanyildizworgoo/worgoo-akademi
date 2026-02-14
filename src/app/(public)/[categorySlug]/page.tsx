@@ -16,6 +16,7 @@ export default function CategoryPage() {
   const [level, setLevel] = useState("");
   const [sort, setSort] = useState("newest");
   const [categoryName, setCategoryName] = useState("");
+  const [categoryDesc, setCategoryDesc] = useState("");
   const popularRef = useRef<HTMLDivElement>(null);
 
   const fetchCourses = useCallback(async () => {
@@ -31,7 +32,10 @@ export default function CategoryPage() {
       setCourses(data.courses || []);
       setCategories(data.categories || []);
       const found = (data.categories || []).find((c: any) => c.slug === categorySlug);
-      if (found) setCategoryName(found.name);
+      if (found) {
+        setCategoryName(found.name);
+        setCategoryDesc(found.description || "");
+      }
     } catch {}
     setLoading(false);
   }, [categorySlug, search, level, sort]);
@@ -186,6 +190,17 @@ export default function CategoryPage() {
           </div>
         </div>
       </section>
+
+      {/* ═══ CATEGORY DESCRIPTION — SEO text ═══ */}
+      {categoryDesc && (
+        <section className="py-16 bg-white border-t border-border/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl">
+              <p className="text-sm text-gray leading-relaxed whitespace-pre-line">{categoryDesc}</p>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
