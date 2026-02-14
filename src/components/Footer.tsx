@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, Instagram, Linkedin, Youtube, Twitter } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -46,6 +46,14 @@ export default function Footer() {
               <div className="flex items-center gap-2 text-sm text-white/60">
                 <MapPin size={14} /> İstanbul, Türkiye
               </div>
+              <Link href="/contact" className="block text-sm text-white/60 hover:text-white transition-colors mt-1">İletişim Formu →</Link>
+            </div>
+            {/* Social Media */}
+            <div className="flex items-center gap-2.5 mt-5">
+              <a href="https://instagram.com/worgoo" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"><Instagram size={14} /></a>
+              <a href="https://linkedin.com/company/worgoo" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"><Linkedin size={14} /></a>
+              <a href="https://youtube.com/@worgoo" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"><Youtube size={14} /></a>
+              <a href="https://twitter.com/worgoo" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"><Twitter size={14} /></a>
             </div>
           </div>
         </div>

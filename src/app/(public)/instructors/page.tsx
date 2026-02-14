@@ -51,7 +51,7 @@ export default function InstructorsPage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
         {loading ? (
           <div className="flex items-center justify-center h-48"><Loader2 size={28} className="animate-spin text-purple" /></div>
         ) : (
