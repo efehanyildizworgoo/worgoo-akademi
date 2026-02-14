@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="mb-4">
-              <Image src="/logo-akademi-white.svg" alt="Worgoo Akademi" width={160} height={28} />
+              <Image src="/worgoo-beyaz-logo.svg" alt="Worgoo Akademi" width={160} height={36} />
             </div>
             <p className="text-sm text-white/60 leading-relaxed">
               Uzman eğitmenlerden online kurslar. WordPress, SEO, dijital pazarlama ve daha fazlası.

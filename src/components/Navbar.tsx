@@ -17,7 +17,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image src="/logo-akademi.svg" alt="Worgoo Akademi" width={180} height={30} priority />
+            <Image src="/worgoo-akademi.svg" alt="Worgoo Akademi" width={180} height={40} priority />
           </Link>
 
           {/* Desktop Nav */}

@@ -58,7 +58,7 @@ export default function PanelSidebar({ role }: { role: "admin" | "instructor" | 
       <div className="flex items-center justify-between px-4 h-16 border-b border-border">
         {!collapsed && (
           <Link href="/" className="flex items-center">
-            <Image src="/logo-akademi.svg" alt="Worgoo Akademi" width={140} height={24} />
+            <Image src="/worgoo-akademi.svg" alt="Worgoo Akademi" width={140} height={32} />
           </Link>
         )}
         <button onClick={() => setCollapsed(!collapsed)} className="p-1.5 rounded-lg hover:bg-bg text-gray transition-colors hidden md:block">
