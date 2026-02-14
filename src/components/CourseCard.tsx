@@ -32,7 +32,7 @@ export default function CourseCard({ course }: CourseCardProps) {
   const hasDiscount = course.salePrice != null && course.salePrice < course.price;
 
   return (
-    <Link href={`/courses/${course.slug}`} className="group bg-white border border-border rounded-2xl overflow-hidden hover:shadow-lg hover:border-purple/20 transition-all duration-300">
+    <Link href={`/kurs/${course.slug}`} className="group bg-white border border-border rounded-2xl overflow-hidden hover:shadow-lg hover:border-purple/20 transition-all duration-300">
       {/* Thumbnail */}
       <div className="relative aspect-video bg-light overflow-hidden">
         {course.thumbnail ? (

@@ -1,36 +1,44 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import CourseCard from "@/components/CourseCard";
 import { Search, Loader2, BookOpen, ChevronRight, ChevronLeft, TrendingUp, Megaphone } from "lucide-react";
 
-export default function CoursesPage() {
+export default function CategoryPage() {
+  const params = useParams();
+  const categorySlug = params.slug as string;
   const [courses, setCourses] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
   const [level, setLevel] = useState("");
   const [sort, setSort] = useState("newest");
+  const [categoryName, setCategoryName] = useState("");
+  const [categoryDesc, setCategoryDesc] = useState("");
   const popularRef = useRef<HTMLDivElement>(null);
 
   const fetchCourses = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams();
-    if (search) params.set("search", search);
-    if (category) params.set("category", category);
-    if (level) params.set("level", level);
-    if (sort) params.set("sort", sort);
+    const p = new URLSearchParams();
+    if (categorySlug) p.set("category", categorySlug);
+    if (search) p.set("search", search);
+    if (level) p.set("level", level);
+    if (sort) p.set("sort", sort);
     try {
-      const res = await fetch(`/api/public/courses?${params}`);
+      const res = await fetch(`/api/public/courses?${p}`);
       const data = await res.json();
       setCourses(data.courses || []);
       setCategories(data.categories || []);
+      const found = (data.categories || []).find((c: any) => c.slug === categorySlug);
+      if (found) {
+        setCategoryName(found.name);
+        setCategoryDesc(found.description || "");
+      }
     } catch {}
     setLoading(false);
-  }, [search, category, level, sort]);
+  }, [categorySlug, search, level, sort]);
 
   useEffect(() => { fetchCourses(); }, [fetchCourses]);
 
@@ -42,6 +50,8 @@ export default function CoursesPage() {
     el.scrollBy({ left: dir === "left" ? -220 : 220, behavior: "smooth" });
   };
 
+  const selectClass = "appearance-none bg-white/[0.06] border border-white/10 rounded-xl text-sm text-white/70 pl-4 pr-9 py-2.5 focus:outline-none focus:border-purple bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.4)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_0.75rem_center] bg-no-repeat";
+
   return (
     <div>
       {/* ═══ HERO ═══ */}
@@ -52,10 +62,10 @@ export default function CoursesPage() {
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-[1.1]">
-            Kurslar
+            {categoryName || categorySlug}
           </h1>
           <p className="text-[15px] text-white/45 mt-4 max-w-lg leading-relaxed">
-            Tüm kurslarımızı keşfedin ve öğrenmeye başlayın. Uzman eğitmenlerden pratik odaklı eğitimler.
+            {categoryName} kategorisindeki tüm kursları keşfedin ve öğrenmeye başlayın.
           </p>
 
           {/* Filters */}
@@ -70,17 +80,13 @@ export default function CoursesPage() {
               />
             </div>
             <div className="flex items-center gap-3 flex-wrap">
-              <select value={category} onChange={(e) => { const v = e.target.value; if (v) { window.location.href = `/${v}`; } else { setCategory(""); } }} className="appearance-none bg-white/[0.06] border border-white/10 rounded-xl text-sm text-white/70 pl-4 pr-9 py-2.5 focus:outline-none focus:border-purple bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.4)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_0.75rem_center] bg-no-repeat">
-                <option value="">Tüm Kategoriler</option>
-                {categories.map((c: any) => <option key={c.id} value={c.slug}>{c.name}</option>)}
-              </select>
-              <select value={level} onChange={(e) => setLevel(e.target.value)} className="appearance-none bg-white/[0.06] border border-white/10 rounded-xl text-sm text-white/70 pl-4 pr-9 py-2.5 focus:outline-none focus:border-purple bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.4)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_0.75rem_center] bg-no-repeat">
+              <select value={level} onChange={(e) => setLevel(e.target.value)} className={selectClass}>
                 <option value="">Tüm Seviyeler</option>
                 <option value="beginner">Başlangıç</option>
                 <option value="intermediate">Orta</option>
                 <option value="advanced">İleri</option>
               </select>
-              <select value={sort} onChange={(e) => setSort(e.target.value)} className="appearance-none bg-white/[0.06] border border-white/10 rounded-xl text-sm text-white/70 pl-4 pr-9 py-2.5 focus:outline-none focus:border-purple bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.4)%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_0.75rem_center] bg-no-repeat">
+              <select value={sort} onChange={(e) => setSort(e.target.value)} className={selectClass}>
                 <option value="newest">En Yeni</option>
                 <option value="popular">En Popüler</option>
                 <option value="price-low">Fiyat: Düşük → Yüksek</option>
@@ -103,7 +109,7 @@ export default function CoursesPage() {
                 <div className="space-y-1">
                   <Link
                     href="/courses"
-                    className="block w-full text-left px-3 py-2 rounded-lg text-sm bg-purple/10 text-purple font-medium transition-colors"
+                    className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray hover:bg-bg hover:text-foreground transition-colors"
                   >
                     Tüm Kategoriler
                   </Link>
@@ -111,7 +117,7 @@ export default function CoursesPage() {
                     <Link
                       key={c.id}
                       href={`/kurs-kategori/${c.slug}`}
-                      className="block w-full text-left px-3 py-2 rounded-lg text-sm text-gray hover:bg-bg hover:text-foreground transition-colors"
+                      className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${categorySlug === c.slug ? "bg-purple/10 text-purple font-medium" : "text-gray hover:bg-bg hover:text-foreground"}`}
                     >
                       {c.name}
                     </Link>
@@ -170,7 +176,7 @@ export default function CoursesPage() {
                 <div className="text-center py-20">
                   <BookOpen size={40} className="mx-auto text-gray-light/40 mb-4" />
                   <h3 className="text-lg font-semibold text-foreground">Kurs bulunamadı</h3>
-                  <p className="text-sm text-gray mt-1">Farklı filtreler deneyebilir veya arama terimini değiştirebilirsiniz.</p>
+                  <p className="text-sm text-gray mt-1">Bu kategoride henüz kurs bulunmuyor.</p>
                 </div>
               ) : (
                 <>
@@ -184,6 +190,17 @@ export default function CoursesPage() {
           </div>
         </div>
       </section>
+
+      {/* ═══ CATEGORY DESCRIPTION — SEO text ═══ */}
+      {categoryDesc && (
+        <section className="py-16 bg-white border-t border-border/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl">
+              <p className="text-sm text-gray leading-relaxed whitespace-pre-line">{categoryDesc}</p>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
