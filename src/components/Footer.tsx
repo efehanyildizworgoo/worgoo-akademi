@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { GraduationCap, Mail, MapPin } from "lucide-react";
+import Image from "next/image";
+import { Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -8,14 +9,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="md:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 bg-purple rounded-xl flex items-center justify-center">
-                <GraduationCap size={20} className="text-white" />
-              </div>
-              <div>
-                <span className="text-lg font-bold">Worgoo</span>
-                <span className="text-lg font-bold text-purple ml-0.5">Akademi</span>
-              </div>
+            <div className="mb-4">
+              <Image src="/logo-akademi-white.svg" alt="Worgoo Akademi" width={160} height={28} />
             </div>
             <p className="text-sm text-white/60 leading-relaxed">
               Uzman eğitmenlerden online kurslar. WordPress, SEO, dijital pazarlama ve daha fazlası.

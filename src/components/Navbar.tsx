@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import { Menu, X, GraduationCap, User, LogOut, ChevronDown, LayoutDashboard } from "lucide-react";
+import Image from "next/image";
+import { Menu, X, User, LogOut, ChevronDown, LayoutDashboard } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout, loading } = useAuth();
@@ -15,14 +16,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
-              <GraduationCap size={20} className="text-white" />
-            </div>
-            <div>
-              <span className="text-lg font-bold text-primary">Worgoo</span>
-              <span className="text-lg font-bold text-purple ml-0.5">Akademi</span>
-            </div>
+          <Link href="/" className="flex items-center">
+            <Image src="/logo-akademi.svg" alt="Worgoo Akademi" width={180} height={30} priority />
           </Link>
 
           {/* Desktop Nav */}

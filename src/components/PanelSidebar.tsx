@@ -4,10 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import Image from "next/image";
 import {
-  GraduationCap, LayoutDashboard, BookOpen, Users, CreditCard,
+  LayoutDashboard, BookOpen, Users, CreditCard,
   Settings, LogOut, Menu, X, ChevronLeft, BarChart3, PlusCircle,
-  MessageSquare, FolderOpen, Layers,
+  FolderOpen, Layers,
 } from "lucide-react";
 
 interface NavItem {
@@ -56,11 +57,8 @@ export default function PanelSidebar({ role }: { role: "admin" | "instructor" | 
       {/* Header */}
       <div className="flex items-center justify-between px-4 h-16 border-b border-border">
         {!collapsed && (
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <GraduationCap size={16} className="text-white" />
-            </div>
-            <span className="text-sm font-bold text-primary">Worgoo<span className="text-purple ml-0.5">Akademi</span></span>
+          <Link href="/" className="flex items-center">
+            <Image src="/logo-akademi.svg" alt="Worgoo Akademi" width={140} height={24} />
           </Link>
         )}
         <button onClick={() => setCollapsed(!collapsed)} className="p-1.5 rounded-lg hover:bg-bg text-gray transition-colors hidden md:block">
